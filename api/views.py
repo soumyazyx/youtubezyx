@@ -19,13 +19,11 @@ def apiOverview(request):
     for item in res["items"]:
         url = "https://www.youtube.com/watch?v={}".format(item["id"]["videoId"])
         title = item["snippet"]["title"]
-        print(title)
         href = "<a href={}>{}</a>".format(url, title)
         embed = "<iframe width='420' height='345' src='{}'></iframe><br/><br/>".format(
             url
         )
         urls.append(href)
-    print(urls)
     str1 = "<br/><br/>".join(urls)
     # return JsonResponse(res)
     return HttpResponse(str1)
