@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Soumya" />
+    <meta name="keyword" content="Advanced youtube filters" />
+    <meta name="description" content="Advanced youtube filters" />
+    <title>youtubezyx</title>
+    <!-- CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    />
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <style>
+      main {
+        max-width: 500px;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="form-wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <main>
+              <form id="form">
+                <div class="input-group mt-2 mb-2">
+                  <input
+                    id="search"
+                    name="search"
+                    type="text"
+                    class="form-control"
+                  />
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                      Search
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </main>
+          </div>
+        </div>
+        <!-- /row -->
+        <div class="row">
+          <div class="col-12">
+            <main>
+              <div id="videos-wrapper" class="continer-fluid"></div>
+            </main>
+          </div>
+        </div>
+        <!-- /row -->
+      </div>
+      <!-- /container -->
+    </div>
+    <!-- /form-wrapper -->
+    <script>
+      var baseurl = window.location.origin;
+
+      function fetchVideos(search) {
+        var wrapper = document.getElementById("videos-wrapper");
+        var url = baseurl + `/api/youtube/${search}`;
+        fetch(url)
+          .then((resp) => resp.json())
+          .then(function (data) {
+            $("#videos-wrapper").empty();
+            for (i in data.items) {
+              item = data.items[i];
+              videoid = item.id.videoId;
+              var frm =
+                `<div class="embed-responsive embed-responsive-16by9">` +
+                `<iframe class="embed-responsive-item" ` +
+                ` width="560" height="315" ` +
+                ` src="https://www.youtube.com/embed/${videoid}"` +
+                ` frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" ` +
+                ` allowfullscreen>` +
+                `</iframe>` +
+                `</div>` +
+                `<br/>`;
+              $("#videos-wrapper").append(frm);
+            }
+          });
+      }
+
+      function search() {
+        var search = $.trim($("#search").val());
+        if (search == "") {
+          alert("Search can't be left blank");
+          return false;
+        }
+        fetchVideos(search);
+      }
+    </script>
+    <script>
+      $(document).ready(function () {
+        $("#form-wrapper").submit(function (e) {
+          e.preventDefault();
+          search();
+        });
+        $("#search").val("kids cartoon");
+        fetchVideos($("#search").val());
+      });
+    </script>
+  </body>
+</html>
